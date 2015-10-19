@@ -1,0 +1,13 @@
+extends layout
+
+block content
+
+  p Welcome to my new and improved website:
+  p Welcome to My profile page
+  p Your username is #{username}
+  p This is a #{test}
+  p The date today is #{date}
+  #[a(href="/logout") Log out]
+
+  if username === 'maxho@atomm.com.sg'
+    #[a(href="/admin") Enter Admin Dashboard]
