@@ -1,7 +1,7 @@
 // Load the Question model
 var Sequelize = require('sequelize');
 
-var sequelize = new Sequelize('wine', 'superadmin', '311086', {
+var sequelize = new Sequelize('wine', 'superadmin', 'xxxx', {
   host: '127.0.0.1',
   dialect: 'postgres',
   port: '5433',
