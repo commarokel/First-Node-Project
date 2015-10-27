@@ -4,7 +4,7 @@ module.exports = function(sequelize, DataTypes) {
 				type: DataTypes.STRING,
 				unqiue: true
 				},
-		content: DataTypes.STRING,
+		content: DataTypes.TEXT,
 		tag: DataTypes.STRING
-	}
+	})
 }

@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  .page-header
+  h3 Question
+      h1 #{title}
+      p #{content}
+      p #{tag}
+
+  form.form-horizontal(id='signup-form', method='POST')
+    .form-group
+      label.col-sm-2.col.control-label(for='Content' style='text-align:left;') Your Answer
+      .col-sm-12
+        textarea.form-control(type='text', rows='10', name='answer', id='answer', placeholder='Your Answer')
+    .form-group
+      .col-sm-7
+        button.btn.btn-success(type='submit')
+          i.fa.fa-user-plus
+          | Post Answer

@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  .page-header
+    h3 Log in
+  form.form-horizontal(id='signup-form', method='POST')
+    .form-group
+      label.col-sm-3.control-label(for='title') Title
+      .col-sm-7
+        input.form-control(type='text', name='title', id='title', placeholder='Title', autofocus)
+    .form-group
+      label.col-sm-3.control-label(for='Content') Content
+      .col-sm-7
+        textarea.form-control(type='text', rows='20', name='content', id='content', placeholder='Content')
+    .form-group
+      label.col-sm-3.control-label(for='Tag') Tag
+      .col-sm-7
+        input.form-control(type='text', name='tag', id='tag', placeholder='Tag')        
+    .form-group
+      .col-sm-offset-3.col-sm-7
+        button.btn.btn-success(type='submit')
+          i.fa.fa-user-plus
+          | Post Question

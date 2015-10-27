@@ -61,7 +61,7 @@ var sequelize = new Sequelize('wine', 'superadmin', 'xxxxx', {
 var User = sequelize.import('./models/User');
 User.sync();
 
-var Question = sequelize.import('/models/Question');
+var Question = sequelize.import('./models/Question');
 Question.sync();
 
 passport.use('local-login', new LocalStrategy({
@@ -170,6 +170,7 @@ function isAdminLoggedIn(req, res, next) {
   res.redirect('/');
 };
 
+// Routes for all pages below
 app.get('/', routes.mainPage);
 app.get('/users', users.userPage);
 app.get('/signup', forms.getsignup);
@@ -189,8 +190,10 @@ app.post('/login', passport.authenticate('local-login',
 }));
 app.get('/profile', isLoggedIn, routes.profilePage);
 app.get('/admin', isAdminLoggedIn, routes.adminDashboard);
-app.get('/question', questions.getQuestion);
-app.post('/question', questions.postQuestion);
+app.get('/questions-list', questions.getQuestion);
+app.get('/submit-question', questions.getQuestionSubmission);
+app.post('/submit-question', questions.postQuestion);
+app.get('/question/:id', questions.getDetailedView);
 app.get('/logout', function(req, res) {
   req.logout();
   res.redirect('/');
@@ -231,75 +234,3 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
-/**
-var knex = require('knex')( {
-  client: 'pg',
-  connection: {
-    host: '127.0.0.1',
-    port: '5433',
-    user: 'superadmin',
-    password: 'xxxx',
-    database: 'wine'
-  },
-  debug:true
-});
-
-knex.schema.hasTable('users').then(function(exists) {
-  if(!exists) {
-    return knex.schema.createTable('users', function (table) {
-      table.increments();
-      table.string('name');
-      table.timestamps();
-    })
-  }
-})
-.then(function() {
-  console.log('users table created successfully');
-})
-.catch(function(err) {
-  console.log(err);
-})
-.finally(function() {
-  console.log('done!');
-});
-
-knex.schema.hasTable('comments').then(function(exists) {
-  if(!exists) {
-    return knex.schema.createTable('comments', function(table) {
-      table.increments();
-      table.string('name');
-      table.timestamps();
-    })
-  }
-})
-.then(function() {
-  console.log('comments table created successfully');
-})
-.catch(function(err) {
-  console.log(err);
-})
-.finally(function() {
-  console.log('done!');
-});
-
-knex.schema.hasTable('accounts').then(function(exists) {
-  if(!exists) {
-    return knex.schema.createTable('accounts', function(table) {
-      table.increments();
-      table.string('name');
-      table.string('email');
-      table.timestamps();
-    })
-  }
-})
-.then(function() {
-  console.log('accounts table created successfully');
-})
-.catch(function(err) {
-  console.log(err);
-})
-.finally(function() {
-  console.log('done!');
-});
-
-**/
