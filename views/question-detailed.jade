@@ -5,13 +5,36 @@ block content
   h3 Question
       h1 #{title}
       p #{content}
-      p #{tag}
+  
+  h3 #{count} Answers <br /><br />
+
+  each answer in answers_array
+    h4= answer.content
+    //p= answer.id
+    each comment in comments_array
+      if comment.id === answer.id
+        p(style="padding-left:2em; border-style:solid;border-width:1px;border-color:#d3d3d3;")= comment.content
+
+    if answer.content 
+      form.form-horizontal(action='/comment' id='signup-form', method='POST')
+        .form-group
+          label.col-sm-2.col.control-label(for='Content' style='text-align:left;') Comment
+          .col-sm-12
+            textarea.form-control(type='text', rows='2', name='comment', id='comment', placeholder='Comment')
+            input.form-control(type='hidden' name='answerID' id='answerID' value=answer.id)
+            input.form-control(type='hidden' name='questionID' id='questionID' value=id)
+        .form-group
+          .col-sm-7
+            button.btn.btn-success(type='submit')
+              i.fa.fa-user-plus
+              | Post Coment
+
 
   form.form-horizontal(id='signup-form', method='POST')
     .form-group
       label.col-sm-2.col.control-label(for='Content' style='text-align:left;') Your Answer
       .col-sm-12
-        textarea.form-control(type='text', rows='10', name='answer', id='answer', placeholder='Your Answer')
+        textarea.form-control(type='text', rows='10', name='answer', id='answer', placeholder='Answer')
     .form-group
       .col-sm-7
         button.btn.btn-success(type='submit')

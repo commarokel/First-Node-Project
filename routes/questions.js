@@ -1,7 +1,7 @@
 // Load the Question model
 var Sequelize = require('sequelize');
 
-var sequelize = new Sequelize('wine', 'superadmin', 'xxxx', {
+var sequelize = new Sequelize('wine', 'superadmin', 'xxxxx', {
   host: '127.0.0.1',
   dialect: 'postgres',
   port: '5433',
@@ -14,6 +14,14 @@ var sequelize = new Sequelize('wine', 'superadmin', 'xxxx', {
 
 var Question = sequelize.import('./../models/Question');
 Question.sync();
+
+var Answer = sequelize.import('./../models/Answer');
+Answer.belongsTo(Question);
+Answer.sync();
+
+var Comment = sequelize.import('./../models/Comment');
+Comment.belongsTo(Answer);
+Comment.sync();
 
 module.exports.getQuestion = function(req, res, next) {
 	Question.findAll({
@@ -28,11 +36,9 @@ module.exports.getQuestion = function(req, res, next) {
 					content: questions[i].content,
 					tag: questions[i].tag,
 					id: questions[i].id,
-					truncated_content: questions[i].content.slice(0,20)
 					}
 				);
 			}
-			console.log(question_array);
 			res.render('questionlist', question_array);
 		})
 		.catch(function(e) {
@@ -48,10 +54,7 @@ module.exports.postQuestion = function(req, res, next) {
 	req.assert('title', 'Please input a title').notEmpty();
 	req.assert('content', 'Please type your question').notEmpty();
 	req.assert('tag', 'Please enter your tag').notEmpty();
-
 	var submitErrors = req.validationErrors();
-	console.log('The Validation Errors are: ' + submitErrors);
-
 	if(submitErrors) {
 		req.flash('errors', submitErrors);
 		res.redirect('/submit-question');
@@ -82,6 +85,11 @@ module.exports.postQuestion = function(req, res, next) {
 
 module.exports.getDetailedView = function(req, res) {
 	var id = req.params.id;
+	var answer_id = req.body.answerID;
+	console.log('the answer ID is: ' + answer_id);
+	var question = {};
+	var answers_array = [];
+	var comments_array = [];
 
 	Question.findOne({
 		where: {
@@ -89,15 +97,67 @@ module.exports.getDetailedView = function(req, res) {
 		}
 	})
 	.then(function(question) {
-		console.log(question.title);
-		var question = {
+		question = {
 			'title': question.title,
 			'content': question.content,
-			'tag': question.tag
+			'tag': question.tag,
+			'id': question.id
 		};
-		res.render('question-detailed', question);
+		Answer.findAll({
+			where: {
+				questionId: id
+			}
+		})
+		.then(function(answers) {
+			for(var i = 0; i < answers.length; i++) {
+				answers_array.push({
+					content: answers[i].content,
+					id: answers[i].id
+				});
+			}
+			question.answers_array = answers_array;
+			question.count = answers.length;
+			Comment.findAll()
+				.then(function(comments) {
+					for(var i = 0; i < comments.length; i++) {
+						comments_array.push({
+							content: comments[i].content,
+							id: comments[i].answerId
+						});
+					}
+					question.comments_array = comments_array;
+					res.render('question-detailed', question);
+				})
+				.catch(function(e) {
+					console.log(e);
+				})
+		})
+		.catch(function(e) {
+			console.log(e);
+		})	
 	})
 	.catch(function(e) {
 		console.log(e);
 	})
-}
+
+};
+
+module.exports.postAnswer = function(req, res) {
+	var id = req.params.id;
+	var answer = Answer.build({content: req.body.answer, questionId: id});
+	answer.save()
+		.then(function() {
+			res.redirect('/question/' + id);
+		})
+};
+
+module.exports.postComment = function(req, res) {
+	//var id = req.params.id;
+	var id = req.body.questionID;
+	var answerID = req.body.answerID;
+	var comment = Comment.build({content: req.body.comment, answerId: answerID});
+	comment.save()
+		.then(function() {
+			res.redirect('/question/' + id);
+		})
+};

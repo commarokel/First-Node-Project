@@ -194,6 +194,8 @@ app.get('/questions-list', questions.getQuestion);
 app.get('/submit-question', questions.getQuestionSubmission);
 app.post('/submit-question', questions.postQuestion);
 app.get('/question/:id', questions.getDetailedView);
+app.post('/question/:id', questions.postAnswer);
+app.post('/comment', questions.postComment);
 app.get('/logout', function(req, res) {
   req.logout();
   res.redirect('/');
