@@ -47,7 +47,7 @@ var LocalStrategy = require('passport-local').Strategy;
 // Load the user model
 var Sequelize = require('sequelize');
 var pghstore = require('pg-hstore');
-var sequelize = new Sequelize('wine', 'superadmin', 'xxxxx', {
+var sequelize = new Sequelize('wine', 'superadmin', 'xxxxxx', {
   host: '127.0.0.1',
   dialect: 'postgres',
   port: '5433',
@@ -191,8 +191,8 @@ app.post('/login', passport.authenticate('local-login',
 app.get('/profile', isLoggedIn, routes.profilePage);
 app.get('/admin', isAdminLoggedIn, routes.adminDashboard);
 app.get('/questions-list', questions.getQuestion);
-app.get('/submit-question', questions.getQuestionSubmission);
-app.post('/submit-question', questions.postQuestion);
+app.get('/submit-question', isAdminLoggedIn, questions.getQuestionSubmission);
+app.post('/submit-question', isAdminLoggedIn, questions.postQuestion);
 app.get('/question/:id', questions.getDetailedView);
 app.post('/question/:id', questions.postAnswer);
 app.post('/comment', questions.postComment);

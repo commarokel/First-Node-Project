@@ -4,5 +4,13 @@ block content
   .page-header
   h3 List of questions <br /><br />
     each question in question_array
-      h1 #[a(href='question/' + question.id) #{question.title}]
-      p Categorized under:  #{question.tag}
+      if !question.pageNumber
+        h1 #[a(href='question/' + question.id) #{question.title}]
+        p #{question.tag}
+      else if question.pageNumber > 1
+        h1 #[a(href='../question/' + question.id) #{question.title}]
+        p #{question.tag}
+      else
+        h1 Nothing to show
+    each page in question_array
+      p #{page.pageArray}

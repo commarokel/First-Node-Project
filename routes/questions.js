@@ -1,7 +1,7 @@
 // Load the Question model
 var Sequelize = require('sequelize');
 
-var sequelize = new Sequelize('wine', 'superadmin', 'xxxxx', {
+var sequelize = new Sequelize('wine', 'superadmin', 'xxxxxx', {
   host: '127.0.0.1',
   dialect: 'postgres',
   port: '5433',
@@ -24,21 +24,33 @@ Comment.belongsTo(Answer);
 Comment.sync();
 
 module.exports.getQuestion = function(req, res, next) {
-	Question.findAll({
-		order: [['createdAt', 'DESC']]
+	var initial_pageSize = 5;
+	Question.findAndCountAll({
+		order: [['createdAt', 'DESC']],
+		limit: initial_pageSize || req.query.pageSize,
+		offset: (req.query.page - 1) * req.query.pageSize
 	})
 		.then(function(questions) {	
 			question_array = [];
-			for(var i = 0; i < questions.length; i++) {
+			page_array = [];
+			for(var i = 0; i < questions.rows.length; i++) {
 				question_array.push(
 					{
-					title: questions[i].title,
-					content: questions[i].content,
-					tag: questions[i].tag,
-					id: questions[i].id,
+					title: questions.rows[i].title,
+					content: questions.rows[i].content,
+					tag: 'Categorized under: ' + questions.rows[i].tag,
+					id: questions.rows[i].id,
+					pageNumber: req.query.page,
 					}
 				);
 			}
+			for(var i = 0; i <= questions.count; i++) {
+				page_array.push(i);
+			}
+			console.log('The array of pages is: ' + page_array);
+			question_array.push({pageArray: page_array});
+			question_array.push({totalEntries: questions.count});
+			question_array.push({totalPageNumber: Math.floor(3)});
 			res.render('questionlist', question_array);
 		})
 		.catch(function(e) {

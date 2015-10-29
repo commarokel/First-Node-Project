@@ -2,11 +2,18 @@ extends layout
 
 block content
   .page-header
+  a(href='/questions-list') Return to Questions Page <br/>
+  a(href='/') Return to Home Page <br/>
   h3 Question
       h1 #{title}
       p #{content}
   
-  h3 #{count} Answers <br /><br />
+  if count > 1
+    h3 #{count} Answers <br /><br />
+  else if count === 0
+    h3 No Answers yet<br/>
+  else 
+    h3 #{count} Answer <br/><br/>
 
   each answer in answers_array
     h4= answer.content
