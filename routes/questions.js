@@ -31,8 +31,9 @@ module.exports.getQuestion = function(req, res, next) {
 		offset: (req.query.page - 1) * req.query.pageSize
 	})
 		.then(function(questions) {	
-			question_array = [];
-			page_array = [];
+			var question_array = [];
+			var page_array = [];
+			var totalPageArray = [];
 			for(var i = 0; i < questions.rows.length; i++) {
 				question_array.push(
 					{
@@ -40,18 +41,24 @@ module.exports.getQuestion = function(req, res, next) {
 					content: questions.rows[i].content,
 					tag: 'Categorized under: ' + questions.rows[i].tag,
 					id: questions.rows[i].id,
-					pageNumber: req.query.page,
+					pageNumber: req.query.page || initial_pageSize,
 					}
 				);
 			}
 			for(var i = 0; i <= questions.count; i++) {
 				page_array.push(i);
 			}
-			console.log('The array of pages is: ' + page_array);
-			question_array.push({pageArray: page_array});
-			question_array.push({totalEntries: questions.count});
-			question_array.push({totalPageNumber: Math.floor(3)});
-			res.render('questionlist', question_array);
+			var totalPageNumber = Math.ceil(questions.count/initial_pageSize);
+			for(var i = 1; i < totalPageNumber+1; i++) {
+				totalPageArray.push(i);
+			};
+			console.log(totalPageArray);
+			
+			res.render('questionlist', {
+										mainObj: question_array, 
+										totalPages: totalPageArray,
+										pageSize: initial_pageSize
+										});
 		})
 		.catch(function(e) {
 			console.log(e);
