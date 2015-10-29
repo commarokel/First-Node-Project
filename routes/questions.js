@@ -24,7 +24,15 @@ Comment.belongsTo(Answer);
 Comment.sync();
 
 module.exports.getQuestion = function(req, res, next) {
-	var initial_pageSize = 5;
+	var initial_pageSize = 10;
+	// Function to create pretty looking slug
+	function convertToSlug(Text) {
+    	return Text
+        .toLowerCase()
+        .replace(/[^\w ]+/g,'')
+        .replace(/ +/g,'-')
+        ;
+ 	}
 	Question.findAndCountAll({
 		order: [['createdAt', 'DESC']],
 		limit: initial_pageSize || req.query.pageSize,
@@ -41,6 +49,7 @@ module.exports.getQuestion = function(req, res, next) {
 					content: questions.rows[i].content,
 					tag: 'Categorized under: ' + questions.rows[i].tag,
 					id: questions.rows[i].id,
+					slug: convertToSlug(questions.rows[i].title),
 					pageNumber: req.query.page || initial_pageSize,
 					}
 				);
@@ -52,8 +61,6 @@ module.exports.getQuestion = function(req, res, next) {
 			for(var i = 1; i < totalPageNumber+1; i++) {
 				totalPageArray.push(i);
 			};
-			console.log(totalPageArray);
-			
 			res.render('questionlist', {
 										mainObj: question_array, 
 										totalPages: totalPageArray,
@@ -74,6 +81,14 @@ module.exports.postQuestion = function(req, res, next) {
 	req.assert('content', 'Please type your question').notEmpty();
 	req.assert('tag', 'Please enter your tag').notEmpty();
 	var submitErrors = req.validationErrors();
+	// Function to create pretty looking slug
+	function convertToSlug(Text) {
+    	return Text
+        .toLowerCase()
+        .replace(/[^\w ]+/g,'')
+        .replace(/ +/g,'-')
+        ;
+ 	}
 	if(submitErrors) {
 		req.flash('errors', submitErrors);
 		res.redirect('/submit-question');
@@ -90,7 +105,7 @@ module.exports.postQuestion = function(req, res, next) {
 					res.redirect('/submit-question');
 				}
 				else if(title.title != req.body.title) {
-					var question = Question.build({title: req.body.title, content: req.body.content, tag: req.body.tag});
+					var question = Question.build({title: req.body.title, content: req.body.content, tag: req.body.tag, slug: convertToSlug(req.body.title)});
 					question.save();
 					req.flash('postSuccess', 'Your question was successfully created!');
 					res.redirect('/questions-list');
@@ -104,12 +119,19 @@ module.exports.postQuestion = function(req, res, next) {
 
 module.exports.getDetailedView = function(req, res) {
 	var id = req.params.id;
+	var slug = req.params.slug;
 	var answer_id = req.body.answerID;
-	console.log('the answer ID is: ' + answer_id);
 	var question = {};
 	var answers_array = [];
 	var comments_array = [];
-
+	// Function to create pretty looking slug
+	function convertToSlug(Text) {
+    	return Text
+        .toLowerCase()
+        .replace(/[^\w ]+/g,'')
+        .replace(/ +/g,'-')
+        ;
+ 	}
 	Question.findOne({
 		where: {
 			id: id
@@ -120,7 +142,8 @@ module.exports.getDetailedView = function(req, res) {
 			'title': question.title,
 			'content': question.content,
 			'tag': question.tag,
-			'id': question.id
+			'id': question.id,
+			'slug': convertToSlug(question.title)
 		};
 		Answer.findAll({
 			where: {

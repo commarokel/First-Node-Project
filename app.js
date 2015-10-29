@@ -193,8 +193,8 @@ app.get('/admin', isAdminLoggedIn, routes.adminDashboard);
 app.get('/questions-list', questions.getQuestion);
 app.get('/submit-question', isAdminLoggedIn, questions.getQuestionSubmission);
 app.post('/submit-question', isAdminLoggedIn, questions.postQuestion);
-app.get('/question/:id', questions.getDetailedView);
-app.post('/question/:id', questions.postAnswer);
+app.get('/question/:id/:slug', questions.getDetailedView);
+app.post('/question/:id/:slug', questions.postAnswer);
 app.post('/comment', questions.postComment);
 app.get('/logout', function(req, res) {
   req.logout();

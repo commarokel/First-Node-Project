@@ -5,10 +5,12 @@ block content
   h3 List of questions <br /><br />
     each question in mainObj
       if !question.pageNumber
-        h1 #[a(href='question/' + question.id) #{question.title}]
+        h1 #[a(href='question/' + question.id + '/' + question.slug) #{question.title}]
+        p #{question.slug}
         p #{question.tag}
       else if question.pageNumber > 1
-        h1 #[a(href='../question/' + question.id) #{question.title}]
+        h1 #[a(href='../question/' + question.id + '/' + question.slug) #{question.title}]
+        p #{question.slug}
         p #{question.tag}
       else
         h1 Nothing to show

@@ -5,6 +5,7 @@ module.exports = function(sequelize, DataTypes) {
 				unqiue: true
 				},
 		content: DataTypes.TEXT,
-		tag: DataTypes.STRING
+		tag: DataTypes.STRING,
+		slug: DataTypes.TEXT
 	})
 }
