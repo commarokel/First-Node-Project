@@ -30,6 +30,7 @@ module.exports.getQuestion = function(req, res, next) {
     	return Text
         .toLowerCase()
         .replace(/[^\w ]+/g,'')
+        .replace(/_/g, '')
         .replace(/ +/g,'-')
         ;
  	}
@@ -124,6 +125,8 @@ module.exports.getDetailedView = function(req, res) {
 	var question = {};
 	var answers_array = [];
 	var comments_array = [];
+	var backURL=req.header('Referer');
+	console.log('the previous URL is' + backURL);
 	// Function to create pretty looking slug
 	function convertToSlug(Text) {
     	return Text
@@ -143,7 +146,8 @@ module.exports.getDetailedView = function(req, res) {
 			'content': question.content,
 			'tag': question.tag,
 			'id': question.id,
-			'slug': convertToSlug(question.title)
+			'slug': convertToSlug(question.title),
+			'previousPage': backURL
 		};
 		Answer.findAll({
 			where: {
