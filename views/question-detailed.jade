@@ -37,7 +37,7 @@ block content
               i.fa.fa-user-plus
               | Post Coment
     else
-      p(style="color:red;") Please login to post comment.
+      p(style="color:red;") Please #[a(href="/login") login] to post comment.
 
 
   if isLoggedIn
@@ -52,4 +52,4 @@ block content
             i.fa.fa-user-plus
             | Post Answer
   else
-    h3(style="color:red;") Please login to post answer.
+    h3(style="color:red;") Please #[a(href="/login") login] to post answer.

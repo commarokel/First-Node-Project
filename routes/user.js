@@ -7,5 +7,6 @@ module.exports.getsignup = function(req, res) {
 };
 
 module.exports.getLogin = function(req, res) {
-	res.render('account/login');
+	var isLoggedIn = { isLoggedIn: req.isAuthenticated() }
+	res.render('account/login', isLoggedIn);
 };
