@@ -2,7 +2,6 @@ extends layout
 
 block content
   .page-header
-  a(href=previousPage) Return to Previous Page <br/>
   a(href='/') Return to Home Page <br/>
   h3 Question
       h1 #{title}
@@ -17,10 +16,12 @@ block content
 
   each answer in answers_array
     h4= answer.content
+    p= answer.author
     //p= answer.id
     each comment in comments_array
       if comment.id === answer.id
         p(style="padding-left:2em; border-style:solid;border-width:1px;border-color:#d3d3d3;")= comment.content
+        p= comment.author
 
     if answer.content 
       form.form-horizontal(action='/comment' id='signup-form', method='POST')

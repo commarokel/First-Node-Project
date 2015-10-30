@@ -1,5 +1,6 @@
 module.exports = function(sequelize, DataTypes) {
 	return sequelize.define('comments', {
-		content: DataTypes.TEXT
+		content: DataTypes.TEXT,
+		author: DataTypes.STRING
 	})
 }

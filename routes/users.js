@@ -12,5 +12,5 @@ var keyInformation = {
 						user2: 'Nathaniel', 
 						user3: 'Sara Kwek',
 						user4: 'Kwek Mingyan'
-					}
+					};
 //module.exports = router;

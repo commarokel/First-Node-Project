@@ -191,8 +191,8 @@ app.post('/login', passport.authenticate('local-login',
 app.get('/profile', isLoggedIn, routes.profilePage);
 app.get('/admin', isAdminLoggedIn, routes.adminDashboard);
 app.get('/questions-list', questions.getQuestion);
-app.get('/submit-question', isAdminLoggedIn, questions.getQuestionSubmission);
-app.post('/submit-question', isAdminLoggedIn, questions.postQuestion);
+app.get('/submit-question', isLoggedIn, questions.getQuestionSubmission);
+app.post('/submit-question', isLoggedIn, questions.postQuestion);
 app.get('/question/:id/:slug', questions.getDetailedView);
 app.post('/question/:id/:slug', questions.postAnswer);
 app.post('/comment', questions.postComment);

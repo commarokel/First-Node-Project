@@ -6,6 +6,7 @@ module.exports = function(sequelize, DataTypes) {
 				},
 		content: DataTypes.TEXT,
 		tag: DataTypes.STRING,
+		author: DataTypes.TEXT,
 		slug: DataTypes.TEXT
 	})
 }

@@ -52,16 +52,17 @@ module.exports.getQuestion = function(req, res, next) {
 					id: questions.rows[i].id,
 					slug: convertToSlug(questions.rows[i].title),
 					pageNumber: req.query.page || initial_pageSize,
+					author: questions.rows[i].author
 					}
 				);
 			}
-			for(var i = 0; i <= questions.count; i++) {
+			for(i = 0; i <= questions.count; i++) {
 				page_array.push(i);
 			}
 			var totalPageNumber = Math.ceil(questions.count/initial_pageSize);
-			for(var i = 1; i < totalPageNumber+1; i++) {
+			for(i = 1; i < totalPageNumber+1; i++) {
 				totalPageArray.push(i);
-			};
+			}
 			res.render('questionlist', {
 										mainObj: question_array, 
 										totalPages: totalPageArray,
@@ -70,7 +71,7 @@ module.exports.getQuestion = function(req, res, next) {
 		})
 		.catch(function(e) {
 			console.log(e);
-		})
+		});
 };
 
 module.exports.getQuestionSubmission = function(req, res, next) {
@@ -106,7 +107,7 @@ module.exports.postQuestion = function(req, res, next) {
 					res.redirect('/submit-question');
 				}
 				else if(title.title != req.body.title) {
-					var question = Question.build({title: req.body.title, content: req.body.content, tag: req.body.tag, slug: convertToSlug(req.body.title)});
+					var question = Question.build({title: req.body.title, content: req.body.content, tag: req.body.tag, author: req.session.username, slug: convertToSlug(req.body.title)});
 					question.save();
 					req.flash('postSuccess', 'Your question was successfully created!');
 					res.redirect('/questions-list');
@@ -114,19 +115,18 @@ module.exports.postQuestion = function(req, res, next) {
 			})
 			.catch(function(e) {
 				console.log(e + ' saving error');
-			})
+			});
 	}
 };
 
 module.exports.getDetailedView = function(req, res) {
 	var id = req.params.id;
-	var slug = req.params.slug;
+	//var slug = req.params.slug;
+	var test = 'test'
 	var answer_id = req.body.answerID;
 	var question = {};
 	var answers_array = [];
 	var comments_array = [];
-	var backURL=req.header('Referer');
-	console.log('the previous URL is' + backURL);
 	// Function to create pretty looking slug
 	function convertToSlug(Text) {
     	return Text
@@ -146,8 +146,7 @@ module.exports.getDetailedView = function(req, res) {
 			'content': question.content,
 			'tag': question.tag,
 			'id': question.id,
-			'slug': convertToSlug(question.title),
-			'previousPage': backURL
+			'slug': convertToSlug(question.title)
 		};
 		Answer.findAll({
 			where: {
@@ -158,7 +157,8 @@ module.exports.getDetailedView = function(req, res) {
 			for(var i = 0; i < answers.length; i++) {
 				answers_array.push({
 					content: answers[i].content,
-					id: answers[i].id
+					id: answers[i].id,
+					author: answers[i].author
 				});
 			}
 			question.answers_array = answers_array;
@@ -168,7 +168,8 @@ module.exports.getDetailedView = function(req, res) {
 					for(var i = 0; i < comments.length; i++) {
 						comments_array.push({
 							content: comments[i].content,
-							id: comments[i].answerId
+							id: comments[i].answerId,
+							author: comments[i].author
 						});
 					}
 					question.comments_array = comments_array;
@@ -176,34 +177,36 @@ module.exports.getDetailedView = function(req, res) {
 				})
 				.catch(function(e) {
 					console.log(e);
-				})
+				});
 		})
 		.catch(function(e) {
 			console.log(e);
-		})	
+		});
 	})
 	.catch(function(e) {
 		console.log(e);
-	})
+	});
 
 };
 
 module.exports.postAnswer = function(req, res) {
 	var id = req.params.id;
-	var answer = Answer.build({content: req.body.answer, questionId: id});
+	var answer = Answer.build({content: req.body.answer, author: req.session.username, questionId: id});
+	var backURL=req.header('Referer');
 	answer.save()
 		.then(function() {
-			res.redirect('/question/' + id);
-		})
+			res.redirect('back');
+		});
 };
 
 module.exports.postComment = function(req, res) {
 	//var id = req.params.id;
 	var id = req.body.questionID;
 	var answerID = req.body.answerID;
-	var comment = Comment.build({content: req.body.comment, answerId: answerID});
+	var backURL=req.header('Referer');	
+	var comment = Comment.build({content: req.body.comment, author: req.session.username, answerId: answerID});
 	comment.save()
 		.then(function() {
-			res.redirect('/question/' + id);
-		})
+			res.redirect('back');
+		});
 };
