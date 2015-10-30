@@ -121,12 +121,12 @@ module.exports.postQuestion = function(req, res, next) {
 
 module.exports.getDetailedView = function(req, res) {
 	var id = req.params.id;
-	//var slug = req.params.slug;
-	var test = 'test'
+	//var slug = req.params.slug;	
 	var answer_id = req.body.answerID;
 	var question = {};
 	var answers_array = [];
 	var comments_array = [];
+	var isLoggedIn = req.session.username;
 	// Function to create pretty looking slug
 	function convertToSlug(Text) {
     	return Text
@@ -173,6 +173,7 @@ module.exports.getDetailedView = function(req, res) {
 						});
 					}
 					question.comments_array = comments_array;
+					question.isLoggedIn = isLoggedIn;
 					res.render('question-detailed', question);
 				})
 				.catch(function(e) {

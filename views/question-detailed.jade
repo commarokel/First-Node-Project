@@ -23,7 +23,7 @@ block content
         p(style="padding-left:2em; border-style:solid;border-width:1px;border-color:#d3d3d3;")= comment.content
         p= comment.author
 
-    if answer.content 
+    if answer.content && isLoggedIn
       form.form-horizontal(action='/comment' id='signup-form', method='POST')
         .form-group
           label.col-sm-2.col.control-label(for='Content' style='text-align:left;') Comment
@@ -36,15 +36,20 @@ block content
             button.btn.btn-success(type='submit')
               i.fa.fa-user-plus
               | Post Coment
+    else
+      p(style="color:red;") Please login to post comment.
 
 
-  form.form-horizontal(id='signup-form', method='POST')
-    .form-group
-      label.col-sm-2.col.control-label(for='Content' style='text-align:left;') Your Answer
-      .col-sm-12
-        textarea.form-control(type='text', rows='10', name='answer', id='answer', placeholder='Answer')
-    .form-group
-      .col-sm-7
-        button.btn.btn-success(type='submit')
-          i.fa.fa-user-plus
-          | Post Answer
+  if isLoggedIn
+    form.form-horizontal(id='signup-form', method='POST')
+      .form-group
+        label.col-sm-2.col.control-label(for='Content' style='text-align:left;') Your Answer
+        .col-sm-12
+          textarea.form-control(type='text', rows='10', name='answer', id='answer', placeholder='Answer')
+      .form-group
+        .col-sm-7
+          button.btn.btn-success(type='submit')
+            i.fa.fa-user-plus
+            | Post Answer
+  else
+    h3(style="color:red;") Please login to post answer.

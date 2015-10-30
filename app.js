@@ -184,7 +184,7 @@ app.post('/signup', passport.authenticate('local-signup',
 app.get('/login', forms.getLogin);
 app.post('/login', passport.authenticate('local-login',
           {
-            successRedirect:'/profile',
+            successRedirect:'/questions-list',
             failureRedirect: '/login',
             failureFlash: true
 }));
