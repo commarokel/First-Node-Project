@@ -1,6 +1,4 @@
-// Load the Question model
 var Sequelize = require('sequelize');
-
 var sequelize = new Sequelize('wine', 'superadmin', 'xxxxxx', {
   host: '127.0.0.1',
   dialect: 'postgres',
@@ -11,14 +9,14 @@ var sequelize = new Sequelize('wine', 'superadmin', 'xxxxxx', {
       idle:10000
   },
 });
-
+// Load the Question model
 var Question = sequelize.import('./../models/Question');
 Question.sync();
-
+// Load the Answer model
 var Answer = sequelize.import('./../models/Answer');
 Answer.belongsTo(Question);
 Answer.sync();
-
+// Load the Comment model
 var Comment = sequelize.import('./../models/Comment');
 Comment.belongsTo(Answer);
 Comment.sync();
@@ -107,7 +105,7 @@ module.exports.postQuestion = function(req, res, next) {
 					res.redirect('/submit-question');
 				}
 				else if(title.title != req.body.title) {
-					var question = Question.build({title: req.body.title, content: req.body.content, tag: req.body.tag, author: req.session.username, slug: convertToSlug(req.body.title)});
+					var question = Question.build({title: req.body.title, content: req.body.content, tag: req.body.tag, author: req.session.username, slug: convertToSlug(req.body.title), votes: 0});
 					question.save();
 					req.flash('postSuccess', 'Your question was successfully created!');
 					res.redirect('/questions-list');
@@ -134,7 +132,8 @@ module.exports.getDetailedView = function(req, res) {
         .replace(/[^\w ]+/g,'')
         .replace(/ +/g,'-')
         ;
- 	}
+ 	};
+
 	Question.findOne({
 		where: {
 			id: id
@@ -146,7 +145,8 @@ module.exports.getDetailedView = function(req, res) {
 			'content': question.content,
 			'tag': question.tag,
 			'id': question.id,
-			'slug': convertToSlug(question.title)
+			'slug': convertToSlug(question.title),
+			'votes': question.votes
 		};
 		Answer.findAll({
 			where: {
@@ -191,13 +191,22 @@ module.exports.getDetailedView = function(req, res) {
 };
 
 module.exports.postAnswer = function(req, res) {
+	req.assert('answer', 'Please input your answer').notEmpty();
+	var answerErrors = req.validationErrors();
 	var id = req.params.id;
-	var answer = Answer.build({content: req.body.answer, author: req.session.username, questionId: id});
-	var backURL=req.header('Referer');
-	answer.save()
-		.then(function() {
-			res.redirect('back');
-		});
+	if(answerErrors) {
+		var backURL=req.header('Referer');
+		req.flash('errors', answerErrors);
+		res.redirect('back');
+		}
+	else {
+		var answer = Answer.build({content: req.body.answer, author: req.session.username, questionId: id});
+		var backURL=req.header('Referer');
+		answer.save()
+			.then(function() {
+				res.redirect('back');
+			});
+	}
 };
 
 module.exports.postComment = function(req, res) {
@@ -210,4 +219,35 @@ module.exports.postComment = function(req, res) {
 		.then(function() {
 			res.redirect('back');
 		});
+};
+
+module.exports.questionPostVote = function(req, res) {
+	var id = req.body.questionID;
+	console.log('the question id is :' + id);
+	var count = req.body.count;
+	console.log('The total count of the vote is ' + count);
+	Question.update(
+	{
+		votes: count,
+	},
+	{
+	where: {id: id}
+	})
+	res.end(count);
+
+};
+
+module.exports.answerPostVote = function(req, res) {
+	var aVote = 0;
+	var aVoteUp = document.getElementById('ansVoteUp');
+	var aVoteDown = document.getElementById('ansVoteDown');	
+	aVoteUp.addEventListener('click', function(e) {
+		e.preventDefault();
+		aVote += 1;
+	});
+	aVoteDown.addEventListener('click', function(e) {
+		e.preventDefault();
+		aVote -= 1;
+	});
+
 };

@@ -9,16 +9,16 @@ var lusca = require('lusca');
 var flash = require('express-flash');
 var methodOverride = require('method-override');
 var bcrypt = require('bcrypt-nodejs');
-
 var passport = require('passport');
 var expressValidator = require('express-validator');
 var secrets = require('./config/secrets');
-
+var $ = require('jquery');
+// Routes
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var forms = require('./routes/user');
 var questions = require('./routes/questions');
-
+// Express
 var app = express();
 
 // view engine setup
@@ -196,6 +196,8 @@ app.post('/submit-question', isLoggedIn, questions.postQuestion);
 app.get('/question/:id/:slug', questions.getDetailedView);
 app.post('/question/:id/:slug', questions.postAnswer);
 app.post('/comment', questions.postComment);
+app.post('/questionVote', questions.questionPostVote);
+app.post('/answerVote', questions.answerPostVote);
 app.get('/logout', function(req, res) {
   req.logout();
   res.redirect('/');

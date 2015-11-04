@@ -1,4 +1,4 @@
-extends layout
+extends layout-2
 
 block content
   .page-header
@@ -6,6 +6,10 @@ block content
   h3 Question
       h1 #{title}
       p #{content}
+      p(id='qVotes') #{votes} 
+      p(id='qVoteUp') Vote Up
+      p(id='qVoteDown') Vote Down
+      input.form-control(type='hidden' name='questionID1' id='questionID1' value=id)
   
   if count > 1
     h3 #{count} Answers <br /><br />
@@ -17,6 +21,8 @@ block content
   each answer in answers_array
     h4= answer.content
     p= answer.author
+    p(id="ansVoteUp") Vote Up
+    p(id="ansVoteDown") Vote Down
     //p= answer.id
     each comment in comments_array
       if comment.id === answer.id
@@ -40,6 +46,18 @@ block content
       p(style="color:red;") Please #[a(href="/login") login] to post comment.
 
 
+  if messages.errors
+    .alert.alert-danger.fade.in
+      button.close(type='button', data-dismiss='alert')
+        i.fa.fa-times-circle-o
+      for error in messages.errors
+        div= error.msg
+  if messages.answerErrors
+    .alert.alert-danger.fade.in
+      button.close(type='button', data-dismiss='alert')
+        i.fa.fa-times-circle-o
+      for error in messages.answerErrors
+        div= error.msg
   if isLoggedIn
     form.form-horizontal(id='signup-form', method='POST')
       .form-group
@@ -53,3 +71,6 @@ block content
             | Post Answer
   else
     h3(style="color:red;") Please #[a(href="/login") login] to post answer.
+
+  script
+    include ../public/js/question-detailed.js
