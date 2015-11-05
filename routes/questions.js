@@ -200,32 +200,38 @@ module.exports.postAnswer = function(req, res) {
 		res.redirect('back');
 		}
 	else {
-		var answer = Answer.build({content: req.body.answer, author: req.session.username, questionId: id});
+		var answerContent = req.body.answer;
+		var questionID = req.body.questionID;
+		console.log('The answer content is ' + answerContent);
+		var data = {'answer': answerContent, 'questionID': questionID, 'author': req.session.username};
+		var answer = Answer.build({content: answerContent, author: req.session.username, questionId: questionID, votes: 0});
 		var backURL=req.header('Referer');
 		answer.save()
 			.then(function() {
-				res.redirect('back');
+				res.send(data)
 			});
 	}
 };
 
 module.exports.postComment = function(req, res) {
 	//var id = req.params.id;
-	var id = req.body.questionID;
+	//var id = req.body.questionID;
+	//var answerID = req.body.answerID;
 	var answerID = req.body.answerID;
+	var content = req.body.comment;
+	console.log('This comment belongs to number: ' + answerID);
+	var data = {'answerID': answerID, 'comment': content, 'author': req.session.username};
 	var backURL=req.header('Referer');	
-	var comment = Comment.build({content: req.body.comment, author: req.session.username, answerId: answerID});
+	var comment = Comment.build({content: content, author: req.session.username, answerId: answerID});
 	comment.save()
 		.then(function() {
-			res.redirect('back');
+			res.send(data);
 		});
 };
 
 module.exports.questionPostVote = function(req, res) {
 	var id = req.body.questionID;
-	console.log('the question id is :' + id);
 	var count = req.body.count;
-	console.log('The total count of the vote is ' + count);
 	Question.update(
 	{
 		votes: count,
@@ -238,16 +244,5 @@ module.exports.questionPostVote = function(req, res) {
 };
 
 module.exports.answerPostVote = function(req, res) {
-	var aVote = 0;
-	var aVoteUp = document.getElementById('ansVoteUp');
-	var aVoteDown = document.getElementById('ansVoteDown');	
-	aVoteUp.addEventListener('click', function(e) {
-		e.preventDefault();
-		aVote += 1;
-	});
-	aVoteDown.addEventListener('click', function(e) {
-		e.preventDefault();
-		aVote -= 1;
-	});
 
 };

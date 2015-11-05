@@ -19,31 +19,34 @@ block content
     h3 #{count} Answer <br/><br/>
 
   each answer in answers_array
-    h4= answer.content
-    p= answer.author
-    p(id="ansVoteUp") Vote Up
-    p(id="ansVoteDown") Vote Down
-    //p= answer.id
-    each comment in comments_array
-      if comment.id === answer.id
-        p(style="padding-left:2em; border-style:solid;border-width:1px;border-color:#d3d3d3;")= comment.content
-        p= comment.author
+    .answerArray
+      h4(class="answerContent")= answer.content
+      p(class="answerAuthor")= answer.author
+      p(class="ansVoteUp") Vote Up
+      p(class="ansVoteDown") Vote Down
+      //p= answer.id
+      each comment in comments_array
+        if comment.id === answer.id
+          .commentArray
+            p(class="commentContent" style="padding-left:2em; border-style:solid;border-width:1px;border-color:#d3d3d3;")= comment.content
+            p(class="commentAuthor")= comment.author
 
-    if answer.content && isLoggedIn
-      form.form-horizontal(action='/comment' id='signup-form', method='POST')
-        .form-group
-          label.col-sm-2.col.control-label(for='Content' style='text-align:left;') Comment
-          .col-sm-12
-            textarea.form-control(type='text', rows='2', name='comment', id='comment', placeholder='Comment')
-            input.form-control(type='hidden' name='answerID' id='answerID' value=answer.id)
-            input.form-control(type='hidden' name='questionID' id='questionID' value=id)
-        .form-group
-          .col-sm-7
-            button.btn.btn-success(type='submit')
-              i.fa.fa-user-plus
-              | Post Coment
-    else
-      p(style="color:red;") Please #[a(href="/login") login] to post comment.
+      if answer.content && isLoggedIn
+        form.form-horizontal(action='/comment' id='signup-form', method='POST')
+          .form-group
+            label.col-sm-2.col.control-label(for='Content' style='text-align:left;') Comment
+            .col-sm-12
+              textarea.form-control(type='text', rows='2', name='comment', id='comment', placeholder='Comment')
+              input.form-control(type='hidden' name='answerID' id='answerID' value=answer.id)
+              input.form-control(type='hidden' name='questionID' id='questionID' value=id)
+          .form-group
+            .col-sm-7
+              button.btn.btn-success(type='button' class='commentButton')
+                i.fa.fa-user-plus
+                | Post Coment
+      else
+        p(style="color:red;") Please #[a(href="/login") login] to post comment.
+    
 
 
   if messages.errors
@@ -66,7 +69,7 @@ block content
           textarea.form-control(type='text', rows='10', name='answer', id='answer', placeholder='Answer')
       .form-group
         .col-sm-7
-          button.btn.btn-success(type='submit')
+          button.btn.btn-success(id="answerButton" type='button')
             i.fa.fa-user-plus
             | Post Answer
   else
@@ -74,3 +77,5 @@ block content
 
   script
     include ../public/js/question-detailed.js
+    include ../public/js/post-answer.js    
+    include ../public/js/post-comments.js

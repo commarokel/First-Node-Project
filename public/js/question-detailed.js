@@ -1,5 +1,4 @@
 $(document).ready(function() {
-    var count = 0; 	
     var count = $('#qVotes').html();
     var count = parseInt(count);
     console.log(count);

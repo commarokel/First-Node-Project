@@ -12,7 +12,6 @@ var bcrypt = require('bcrypt-nodejs');
 var passport = require('passport');
 var expressValidator = require('express-validator');
 var secrets = require('./config/secrets');
-var $ = require('jquery');
 // Routes
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -194,7 +193,8 @@ app.get('/questions-list', questions.getQuestion);
 app.get('/submit-question', isLoggedIn, questions.getQuestionSubmission);
 app.post('/submit-question', isLoggedIn, questions.postQuestion);
 app.get('/question/:id/:slug', questions.getDetailedView);
-app.post('/question/:id/:slug', questions.postAnswer);
+//app.post('/question/:id/:slug', questions.postAnswer);
+app.post('/answer', questions.postAnswer);
 app.post('/comment', questions.postComment);
 app.post('/questionVote', questions.questionPostVote);
 app.post('/answerVote', questions.answerPostVote);
