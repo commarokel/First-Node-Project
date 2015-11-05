@@ -1,4 +1,4 @@
-# First-Node-Project
+# Node.js Project - StackOverflow Clone
 
 Personal Project to replicate StackOverflow's features. 
 
