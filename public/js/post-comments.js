@@ -5,8 +5,6 @@ $(document).ready(function() {
 		var answerID;
 		comment = $(this).parent().parent().prev().children('.col-sm-12').children('.comment').val();
 		answerID = $(this).parent().parent().prev().children('.col-sm-12').children('.comment').next().val();
-		console.log('the answer ID is ' + answerID);
-		console.log('the comment is ' + comment);
 	    var data = {comment: comment, answerID: answerID};
 		$.ajax({
 			type: 'POST',

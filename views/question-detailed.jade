@@ -22,8 +22,10 @@ block content
     div(class='answerArray' + answer.id)
       h4(class="answerContent")= answer.content
       p(class="answerAuthor")= answer.author
+      p(class="ansVotes" + answer.id)= answer.votes
       p(class="ansVoteUp") Vote Up
       p(class="ansVoteDown") Vote Down
+      input.form-control(type='hidden' class=answer.id value=answer.id)
       //p= answer.id
       each comment in comments_array
         if comment.id === answer.id

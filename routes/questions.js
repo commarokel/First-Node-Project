@@ -158,7 +158,8 @@ module.exports.getDetailedView = function(req, res) {
 				answers_array.push({
 					content: answers[i].content,
 					id: answers[i].id,
-					author: answers[i].author
+					author: answers[i].author,
+					votes: answers[i].votes
 				});
 			}
 			question.answers_array = answers_array;
@@ -214,9 +215,6 @@ module.exports.postAnswer = function(req, res) {
 };
 
 module.exports.postComment = function(req, res) {
-	//var id = req.params.id;
-	//var id = req.body.questionID;
-	//var answerID = req.body.answerID;
 	var answerID = req.body.answerID;
 	var content = req.body.comment;
 	console.log('This comment belongs to number: ' + answerID);
@@ -239,10 +237,21 @@ module.exports.questionPostVote = function(req, res) {
 	{
 	where: {id: id}
 	})
-	res.end(count);
-
+	res.send(count);
 };
 
 module.exports.answerPostVote = function(req, res) {
-
+	var id = req.body.answerID;
+	var count = req.body.count;
+	console.log(id);
+	console.log('my count iss.........' + count);
+	Answer.update( 
+	{
+		votes: count,
+	},
+	{
+	where: {id: id}
+	})
+	var data = {'answerID': id, 'count': count};
+	res.send(data);
 };
