@@ -148,7 +148,6 @@ app.use(flash());
 app.use(function(req, res, next) {
   res.locals.user = req.user;
   res.locals.userEmail = req.session.username;
-  res.locals.myName = 'max';
   next();
 });
 
@@ -171,7 +170,8 @@ function isAdminLoggedIn(req, res, next) {
   res.redirect('/');
 };
 
-app.get('/', index.mainPage);
+//app.get('/', index.mainPage);
+app.get('/', questions.getQuestion);
 app.get('/users', users.userPage);
 app.get('/signup', forms.getsignup);
 app.post('/signup', passport.authenticate('local-signup', 
@@ -184,13 +184,13 @@ app.post('/signup', passport.authenticate('local-signup',
 app.get('/login', forms.getLogin);
 app.post('/login', passport.authenticate('local-login',
           {
-            successRedirect:'/questions-list',
+            successRedirect:'/',
             failureRedirect: '/login',
             failureFlash: true
 }));
 app.get('/profile', isLoggedIn, index.profilePage);
 app.get('/admin', isAdminLoggedIn, index.adminDashboard);
-app.get('/questions-list', questions.getQuestion);
+//app.get('/questions-list', questions.getQuestion);
 app.get('/submit-question', isLoggedIn, questions.getQuestionSubmission);
 app.post('/submit-question', isLoggedIn, questions.postQuestion);
 app.get('/question/:id/:slug', questions.getDetailedView);

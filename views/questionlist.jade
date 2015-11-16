@@ -1,21 +1,49 @@
 extends layout
 
 block content
-  .page-header
-  h3 List of questions <br /><br />
-    each question in mainObj
-      if !question.pageNumber
-        h1 #[a(href='question/' + question.id + '/' + question.slug) #{question.title}]
-        p #{question.slug}
-        p Asked by #{question.author}
-        p #{question.tag}
-      else if question.pageNumber > 1
-        h1 #[a(href='../question/' + question.id + '/' + question.slug) #{question.title}]
-        p #{question.slug}
-        p Asked by #{question.author}
-        p #{question.tag}
-      else
-        h1 Nothing to show
+  h3 General Questions<br />
+    .container
+      each question in mainObj
+        if !question.pageNumber
+          div(class='question-container margin-top')
+            div(class='question-statistics')
+              div(class='question-views') 
+                div(class='views')
+                  <span>10</span>
+                  div views
+              div(class='question-answers')
+                div(class='answers')
+                  <span>1</span>
+                  div answer
+              div(class='question-votes') 
+                div(class='vote')
+                  <span>0</span>
+                  div vote
+            div(class='question-summary')
+              p(class='question-title') #[a(href='question/' + question.id + '/' + question.slug) #{question.title}]
+              p(class='question-author') asked by <span class='blue'> #{question.author} </span>
+              p(class='question-tag') #{question.tag}
+        else if question.pageNumber > 1
+          div(class='question-container margin-top')
+            div(class='question-statistics')
+              div(class='question-views') 
+                div(class='views')
+                  <span>10</span>
+                  div views
+              div(class='question-answers')
+                div(class='answers')
+                  <span>1</span>
+                  div answer
+              div(class='question-votes') 
+                div(class='vote')
+                  <span>0</span>
+                  div vote
+            div(class='question-summary')
+              p(class='question-title') #[a(href='question/' + question.id + '/' + question.slug) #{question.title}]
+              p(class='question-author') asked by <span class='blue'> #{question.author} </span>
+              p(class='question-tag') #{question.tag}
+        else
+          h1 Nothing to show
 
     each page in totalPages
       if page === 1

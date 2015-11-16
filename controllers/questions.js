@@ -108,7 +108,8 @@ module.exports.postQuestion = function(req, res, next) {
 					var question = Question.build({title: req.body.title, content: req.body.content, tag: req.body.tag, author: req.session.username, slug: convertToSlug(req.body.title), votes: 0});
 					question.save();
 					req.flash('postSuccess', 'Your question was successfully created!');
-					res.redirect('/questions-list');
+					//res.redirect('/questions-list');
+					res.redirect('/');
 				}
 			})
 			.catch(function(e) {

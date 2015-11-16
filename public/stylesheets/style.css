@@ -77,3 +77,68 @@ footer {
 .fa {
   margin-right: 6px;
 }
+
+// Question List Styling
+
+.container {
+  position:relative;
+}
+.margin-top {
+  margin-top:1em;
+}
+.question-container {
+  position:relative;
+  border-top:1px solid #bdbdbd;
+  padding-bottom:2em;
+  padding-top:1em;
+}
+.question-statistics {
+  float: left;
+  width:20%;
+}
+
+.question-summary {
+  float: left;
+  width:50%;
+  text-align:left;
+}
+
+.question-title {
+  font-size:1em;
+  text-align:left;
+}
+
+.question-views, .question-answers, .question-votes {
+  display:inline-block;
+  font-size:0.7em;
+  min-width:38px;
+}
+.question-title, .question-slug{
+  font-size:0.7em;
+}
+.question-tag {
+  font-size:0.5em;
+}
+
+.views, .answers, .vote {
+  text-align:center;
+  margin-right:25px;
+}
+
+.views div, .answers div, .vote div {
+  padding:5px 0;
+}
+
+.views > div, .answers > div, .vote > div {
+  font-size:0.7em;
+}
+
+.question-author {
+  position:absolute;
+  right:40em;
+  font-size:0.5em;
+}
+
+.blue {
+  color:#337ab7;
+}
