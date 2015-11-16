@@ -147,6 +147,8 @@ passport.deserializeUser(function(id, done) {
 app.use(flash());
 app.use(function(req, res, next) {
   res.locals.user = req.user;
+  res.locals.userEmail = req.session.username;
+  res.locals.myName = 'max';
   next();
 });
 
@@ -169,12 +171,6 @@ function isAdminLoggedIn(req, res, next) {
   res.redirect('/');
 };
 
-// Routes for all pages below
-app.get('*', function(req, res, next) {
-  res.locals.user = req.user;
-  var userName = res.locals.user;
-  next();
-});
 app.get('/', index.mainPage);
 app.get('/users', users.userPage);
 app.get('/signup', forms.getsignup);
