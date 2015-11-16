@@ -13,10 +13,10 @@ var passport = require('passport');
 var expressValidator = require('express-validator');
 var secrets = require('./config/secrets');
 // Routes
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var forms = require('./routes/user');
-var questions = require('./routes/questions');
+var index = require('./controllers/index');
+var users = require('./controllers/users');
+var forms = require('./controllers/user');
+var questions = require('./controllers/questions');
 // Express
 var app = express();
 
@@ -46,7 +46,7 @@ var LocalStrategy = require('passport-local').Strategy;
 // Load the user model
 var Sequelize = require('sequelize');
 var pghstore = require('pg-hstore');
-var sequelize = new Sequelize('wine', 'superadmin', 'xxxxxx', {
+var sequelize = new Sequelize('wine', 'superadmin', '311086', {
   host: '127.0.0.1',
   dialect: 'postgres',
   port: '5433',
@@ -170,7 +170,12 @@ function isAdminLoggedIn(req, res, next) {
 };
 
 // Routes for all pages below
-app.get('/', routes.mainPage);
+app.get('*', function(req, res, next) {
+  res.locals.user = req.user;
+  var userName = res.locals.user;
+  next();
+});
+app.get('/', index.mainPage);
 app.get('/users', users.userPage);
 app.get('/signup', forms.getsignup);
 app.post('/signup', passport.authenticate('local-signup', 
@@ -187,8 +192,8 @@ app.post('/login', passport.authenticate('local-login',
             failureRedirect: '/login',
             failureFlash: true
 }));
-app.get('/profile', isLoggedIn, routes.profilePage);
-app.get('/admin', isAdminLoggedIn, routes.adminDashboard);
+app.get('/profile', isLoggedIn, index.profilePage);
+app.get('/admin', isAdminLoggedIn, index.adminDashboard);
 app.get('/questions-list', questions.getQuestion);
 app.get('/submit-question', isLoggedIn, questions.getQuestionSubmission);
 app.post('/submit-question', isLoggedIn, questions.postQuestion);

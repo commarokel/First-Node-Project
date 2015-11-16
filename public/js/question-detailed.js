@@ -36,7 +36,6 @@ $(document).ready(function() {
 		});
 	});
 
-	//var ansCount;
 	getAnsVote();
 
 	function getAnsVote() {
@@ -74,7 +73,6 @@ $(document).ready(function() {
 				url: 'http://localhost:3000/answerVote',
 				success: function(data) {
 					$('.ansVotes' + data.answerID).text(data.count);
-					//document.getElementsByClassName('.ansVote' + data.answerID)[0].innerHTML(data.count);
 				},
 				error: function(e) {
 					console.log(e);
