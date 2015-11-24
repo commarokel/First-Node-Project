@@ -46,7 +46,7 @@ module.exports.getQuestion = function(req, res, next) {
 					{
 					title: questions.rows[i].title,
 					content: questions.rows[i].content,
-					tag: 'Categorized under: ' + questions.rows[i].tag,
+					tag: questions.rows[i].tag,
 					id: questions.rows[i].id,
 					slug: convertToSlug(questions.rows[i].title),
 					pageNumber: req.query.page || initial_pageSize,
